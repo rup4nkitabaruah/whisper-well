@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Disease Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 90%;
+            text-align: left;
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 20px;
+            font-weight: 500;
+            display: block;
+            margin: 20px 0 10px;
+            text-align: center;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        input[type="radio"] {
+            accent-color: #007bff;
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.07);
+        }
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 25px;
+            text-align: center;
+            color: #d9534f;
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Advanced Disease Prediction</h2>
+        <form id="symptomForm">
+            <label id="questionText">Do you have fever or chills?</label>
+            <div class="radio-group">
+                <input type="radio" name="response" value="yes"> Yes
+                <input type="radio" name="response" value="no"> No
+            </div>
+            <button type="button" onclick="nextQuestion()">Next</button>
+        </form>
+        <h3 id="result"></h3>
+    </div>
+    <script>
+        const questions = [
+            "Do you have fever or chills?",
+            "Do you have a sore throat or cough? (Please specify: dry or productive)",
+            "Do you have headaches or body aches?",
+            "Do you have stomach pain, vomiting, or diarrhea? (Please specify: frequency and severity)",
+            "Do you have difficulty breathing or chest pain?",
+            "Do you feel fatigued or have unexplained weight loss?",
+            "Do you have a rash or skin irritation? (Please describe)",
+            "Do you have joint pain or swelling? (Please specify which joints)",
+            "Do you have blurred vision or dizziness?",
+            "Do you experience frequent urination or extreme thirst?",
+            "Do you have unexplained bruising or slow healing wounds?",
+            "Have you traveled recently or been in contact with someone diagnosed with a contagious disease?",
+            "Do you have a history of chronic illnesses (e.g., diabetes, hypertension)?"
+           
+           
+        ];
+        
+        let responses = [];
+        let currentQuestion = 0;
+
+        function nextQuestion() {
+            let selectedOption = document.querySelector('input[name=response]:checked');
+            if (!selectedOption) return;
+
+            // Store the response
+            responses.push(selectedOption.value);
+            selectedOption.checked = false;
+
+            // Check if we need to display a text input for specific questions
+            if (currentQuestion === 1 || currentQuestion === 3 || currentQuestion === 6 || currentQuestion === 8) {
+                const additionalInput = document.createElement('input');
+                additionalInput.type = 'text';
+                additionalInput.placeholder = 'Please specify...';
+                additionalInput.id = 'additionalInfo';
+                document.getElementById("symptomForm").appendChild(additionalInput);
+            } else if (currentQuestion === 14) {
+                const ageInput = document.createElement('input');
+                ageInput.type = 'number';
+                ageInput.placeholder = 'Enter your age';
+                ageInput.id = 'ageInput';
+                document.getElementById("symptomForm").appendChild(ageInput);
+            } else if (currentQuestion === 15) {
+                const genderInput = document.createElement('select');
+                genderInput.id = 'genderInput';
+                genderInput.innerHTML = `
+                    <option value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                `;
+                document.getElementById("symptomForm").appendChild(genderInput);
+            } else if (currentQuestion === 16) {
+                const severityInput = document.createElement('select');
+                severityInput.id = 'severityInput';
+                severityInput.innerHTML = `
+                    <option value="">Rate severity</option>
+                    <option value="mild">Mild</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="severe">Severe</option>
+                `;
+                document.getElementById("symptomForm").appendChild(severityInput);
+            }
+
+            currentQuestion++;
+
+            // Check if there are more questions
+            if (currentQuestion < questions.length) {
+                document.getElementById("questionText").innerText = questions[currentQuestion];
+            } else {
+                predictDisease();
+            }
+        }
+        function predictDisease() {
+    // Collect additional responses
+    const additionalInfo = document.getElementById('additionalInfo') ? document.getElementById('additionalInfo').value : '';
+    const age = document.getElementById('ageInput') ? document.getElementById('ageInput').value : '';
+    const gender = document.getElementById('genderInput') ? document.getElementById('genderInput').value : '';
+    const severity = document.getElementById('severityInput') ? document.getElementById('severityInput').value : '';
+
+    // Add additional responses to the responses array
+    if (additionalInfo) responses.push(additionalInfo);
+    if (age) responses.push(age);
+    if (gender) responses.push(gender);
+    if (severity) responses.push(severity);
+
+    let resultText = "";
+    let yesCount = responses.filter(ans => ans === "yes").length;
+
+    // Disease prediction logic
+    if (yesCount >= 9) {
+        resultText = "You may have a severe condition. Seek medical attention immediately.";
+    } else if (yesCount >= 7) {
+        resultText = "Your symptoms indicate a possible major illness. Consult a doctor soon.";
+    } else if (responses[9] === "yes" && responses[10] === "yes") {
+        resultText = "Possible **Diabetes Mellitus**. Please consult a doctor.";
+    } else if (responses[0] === "yes" && responses[1] === "yes" && responses[2] === "yes" && responses[6] === "yes") {
+        resultText = "You may have a viral infection such as **Measles** or **Dengue Fever**. Consult a doctor.";
+    } else if (responses[3] === "yes" && responses[4] === "yes") {
+        resultText = "Potential **Gastroenteritis** or **Pneumonia**. Seek medical help.";
+    } else if (responses[5] === "yes" && responses[6] === "yes") {
+        resultText = "You might be experiencing a chronic condition such as **Chronic Fatigue Syndrome** or **Fibromyalgia**. Please see a healthcare professional.";
+    } else if (responses[1] === "yes" && responses[2] === "yes" && responses[4] === "yes") {
+        resultText = "You may have a respiratory infection (e.g., **Bronchitis** or **COVID-19**). Please consult a healthcare provider.";
+    } else if (responses[3] === "yes" && (responses[4] === "yes" || responses[5] === "yes")) {
+        resultText = "You may be experiencing a gastrointestinal issue (e.g., **Food Poisoning** or **Irritable Bowel Syndrome**). Seek medical advice.";
+    } else if (responses[0] === "yes" && responses[5] === "yes") {
+        resultText = "You may be experiencing flu-like symptoms (e.g., **Influenza**). Monitor your health closely.";
+    } else if (responses[6] === "yes" && responses[8] === "yes") {
+        resultText = "Possible **Allergic Reaction** (e.g., **Eczema**) or skin condition (e.g., **Psoriasis**). Consult a dermatologist.";
+    } else if (responses[7] === "yes") {
+        resultText = "Joint pain may indicate **Arthritis** (e.g., **Rheumatoid Arthritis** or **Osteoarthritis**) or another condition. Please see a doctor.";
+    } else if (responses[9] === "yes" && (responses[10] === "yes" || responses[11] === "yes")) {
+        resultText = "Possible **Urinary Tract Infection (UTI)** or other metabolic issues (e.g., **Kidney Disease**). Consult a healthcare professional.";
+    } else if (responses[0] === "yes" && responses[1] === "yes" && responses[3] === "yes") {
+        resultText = "You may have a respiratory infection or flu (e.g., **Influenza**). Please consult a healthcare provider.";
+    } else if (responses[2] === "yes" && responses[4] === "yes") {
+        resultText = "You may be experiencing a serious condition affecting your respiratory system (e.g., **Pneumonia**). Seek medical attention.";
+    } else if (responses[1] === "yes" && responses[5] === "yes") {
+        resultText = "You may have a viral infection (e.g., **Mononucleosis**). Monitor your symptoms closely.";
+    } else if (responses[3] === "yes" && responses[6] === "yes") {
+        resultText = "Possible **Gastroenteritis**. Consult a healthcare professional.";
+    } else if (responses[4] === "yes" && responses[8] === "yes") {
+        resultText = "You may have a respiratory or cardiovascular issue (e.g., **Asthma** or **Heart Disease**). Seek medical advice.";
+    } else if (responses[5] === "yes" && responses[9] === "yes") {
+        resultText = "Possible **Chronic Fatigue Syndrome** or other underlying condition (e.g., **Hypothyroidism**). Consult a doctor.";
+    } else if (responses[6] === "yes" && responses[10] === "yes") {
+        resultText = "Possible **Autoimmune Disorder** (e.g., **Lupus** or **Rheumatoid Arthritis**). Please see a healthcare professional.";
+    } else if (responses[7] === "yes" && responses[9] === "yes") {
+        resultText = "Possible **Gout** or other metabolic disorder. Consult a healthcare provider.";
+    } else if (responses[8] === "yes" && responses[10] === "yes") {
+        resultText = "Possible **Neurological Issue** (e.g., **Multiple Sclerosis**). Seek medical attention.";
+    } else if (responses[1] === "yes" && responses[3] === "yes" && responses[4] === "yes") {
+        resultText = "You may have **Strep Throat** or another serious throat infection. Consult a healthcare provider.";
+    } else if (responses[0] === "yes" && responses[2] === "yes" && responses[5] === "yes") {
+        resultText = "Possible **Viral Infection** (e.g., **COVID-19** or **Flu**). Monitor your symptoms closely.";
+    } else if (responses[3] === "yes" && responses[5] === "yes" && responses[6] === "yes") {
+        resultText = "Possible **Chronic Gastrointestinal Disorder** (e.g., **Celiac Disease** or **Crohn's Disease**). Consult a healthcare professional.";
+    } else {
+        resultText = "Your symptoms do not indicate a serious condition, but monitor your health and consult a doctor if symptoms persist.";
+    }
+
+    document.getElementById("result").innerText = resultText;
+    document.getElementById("symptomForm").style.display = 'none';
+}    </script>
+</body>
+</html>

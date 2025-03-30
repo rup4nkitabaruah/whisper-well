@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Diet Planner with Flexible Meal Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid #388E3C;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        select:focus, input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        button i {
+            margin-right: 8px;
+        }
+        .meal-plan {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Allow horizontal scrolling */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden; /* To round the corners of the table */
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e0e0e0; /* Highlight row on hover */
+        }
+        .meal {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fas fa-utensils"></i> Smart Diet Planner</h1>
+        <p>Flexible Meal Selection</p>
+    </header>
+
+    <div class="container">
+        <label for="dietType">Select your diet type:</label>
+        <select id="dietType">
+            <option value="vegetarian">Vegetarian</option>
+            <option value="non-vegetarian">Non-Vegetarian</option>
+        </select>
+
+        <label for="userInput">Enter your Disease:</label>
+        <input type="text" id="userInput" placeholder="e.g., Write Your Disease or Health Condition">
+        <button onclick="generateMealPlan()"><i class="fas fa-check"></i> Get Meal Plan</button>
+
+        <div class="meal-plan" id="mealPlan"></div>
+    </div>
+
+    <script>
+        const mealDatabase = {
+            vegetarian: {
+                breakfast: [
+                    "Oatmeal", 
+                    "Greek Yogurt with Berries", 
+                    "Scrambled Tofu", 
+                    "Avocado Toast",
+                    "Smoothie Bowl", 
+                    "Chia Seed Pudding", 
+                    "Fruit Salad", 
+                    "Vegetable Omelette",
+                    "Peanut Butter Banana Toast",
+                    "Cottage Cheese with Pineapple"
+                ],
+                lunch: [
+                    "Grilled Vegetable Salad", 
+                    "Quinoa Bowl with Chickpeas", 
+                    "Vegetable Wrap", 
+                    "Vegetable Stir Fry",
+                    "Caprese Salad", 
+                    "Lentil Salad", 
+                    "Stuffed Bell Peppers", 
+                    "Zucchini Noodles with Pesto",
+                    "Mushroom Risotto",
+                    "Falafel with Hummus"
+                ],
+                dinner: [
+                    "Lentil Soup", 
+                    "Stuffed Peppers", 
+                    "Vegetable Curry", 
+                    "Pasta Primavera",
+                    "Chickpea Stew", 
+                    "Vegetable Tacos", 
+                    "Mushroom Stroganoff", 
+                    "Spinach and Ricotta Stuffed Shells",
+                    "Cauliflower Fried Rice",
+                    "Vegetable Paella"
+                ]
+            },
+            nonVegetarian: {
+                breakfast: [
+                    "Oatmeal with Honey", 
+                    "Greek Yogurt with Berries", 
+                    "Scrambled Eggs", 
+                    "Avocado Toast",
+                    "Breakfast Burrito", 
+                    "Smoked Salmon on Bagel", 
+                    "Egg and Cheese Sandwich", 
+                    "Protein Pancakes",
+                    "Bacon and Eggs",
+                    "Fruit and Nut Granola"
+                ],
+                lunch: [
+                    "Grilled Chicken Salad", 
+                    "Quinoa Bowl with Grilled Chicken", 
+                    "Turkey Wrap", 
+                    "Chicken Stir Fry",
+                    "Beef Tacos", 
+                    "Shrimp and Avocado Salad", 
+                    "Pasta with Chicken", 
+                    "Tuna Salad Sandwich",
+                    "BBQ Chicken Bowl",
+                    "Meatball Sub"
+                ],
+                dinner: [
+                    "Baked Salmon", 
+                    "Chicken Curry", 
+                    "Stuffed Peppers with Meat", 
+                    "Beef Stir Fry",
+                    "Grilled Steak with Vegetables", 
+                    "Pork Chops with Applesauce", 
+                    "Shrimp Scampi", 
+                    "Chicken Alfredo",
+                    "Lamb Chops with Mint Sauce",
+                    "Fish Tacos"
+                ]
+            }
+        };
+
+        function getRandomMeal(meals) {
+            return meals[Math.floor(Math.random() * meals.length)];
+        }
+
+        function generateMealPlan() {
+            const mealPlanDiv = document.getElementById("mealPlan");
+            mealPlanDiv.innerHTML = '';
+
+            const dietType = document.getElementById("dietType").value;
+            const selectedMeals = mealDatabase[dietType === "vegetarian" ? "vegetarian" : "nonVegetarian"];
+            const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+            let tableHTML = '<table><thead><tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th></tr></thead><tbody>';
+            daysOfWeek.forEach(day => {
+                tableHTML += `<tr><td>${day}</td>`;
+                for (const mealType in selectedMeals) {
+                    const meal = getRandomMeal(selectedMeals[mealType]);
+                    tableHTML += `<td class="meal">${meal}</td>`;
+                }
+                tableHTML += `</tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            mealPlanDiv.innerHTML = tableHTML;
+        }
+    </script>
+</body>
+</html>

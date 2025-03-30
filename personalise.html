@@ -1,0 +1,172 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Treatment Plan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .container {
+            width: 700px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.07);
+        }
+        h2 {
+            font-size: 30px;
+            font-weight: 600;
+        }
+        input {
+            width: 85%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: inset 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        input:focus {
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            margin-top: 20px;
+            padding: 15px 35px;
+            border: none;
+            background: #ff416c;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            background: #ff2a56;
+            transform: scale(1.1);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            display: none;
+            box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 500;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🌿 AI-Powered Personalized Treatment Plan 🌿</h2>
+        <input type="text" id="diseaseInput" placeholder="Enter Disease Name">
+        <button onclick="generateTreatment()">Get Treatment Plan</button>
+        <button onclick="startVoiceInput()">🎤 Speak</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function generateTreatment() {
+            const disease = document.getElementById("diseaseInput").value.trim().toLowerCase();
+            const resultDiv = document.getElementById("result");
+            
+            if (disease === "") {
+                resultDiv.style.display = "none";
+                alert("Please enter a disease name.");
+                return;
+            }
+            
+            const treatments = {
+    "cold": "<strong>Personalized Medicine:</strong> Antihistamines, Decongestants.<br> <strong>AI Treatment Plan:</strong> AI-driven symptom tracking, hydration reminders, and rest recommendations.",
+    "flu": "<strong>Personalized Medicine:</strong> Antiviral medications (if severe).<br> <strong>AI Treatment Plan:</strong> AI-powered fever monitoring, hydration tracking, and personalized rest schedules.",
+    "typhoid": "<strong>Personalized Medicine:</strong> Antibiotics (Ciprofloxacin, Azithromycin), Antipyretics.<br> <strong>AI Treatment Plan:</strong> AI-driven fever monitoring, hydration and nutrition reminders, and medication adherence tracking.",
+    "fever": "<strong>Personalized Medicine:</strong> Paracetamol, Ibuprofen.<br> <strong>AI Treatment Plan:</strong> AI-powered temperature monitoring, hydration tracking, and personalized rest schedules.",
+    "diabetes": "<strong>Personalized Medicine:</strong> Metformin, Insulin (if required).<br> <strong>AI Treatment Plan:</strong> Maintain a low-carb diet, regular glucose monitoring, and AI-driven lifestyle tracking.",
+    "hypertension": "<strong>Personalized Medicine:</strong> ACE Inhibitors, Beta-blockers.<br> <strong>AI Treatment Plan:</strong> Monitor blood pressure using AI apps, reduce salt intake, and exercise regularly.",
+    "asthma": "<strong>Personalized Medicine:</strong> Inhalers (Albuterol), Corticosteroids.<br> <strong>AI Treatment Plan:</strong> AI-powered breath tracking and pollution monitoring.",
+    "migraine": "<strong>Personalized Medicine:</strong> Triptans, Pain Relievers.<br> <strong>AI Treatment Plan:</strong> AI-driven stress management, sleep monitoring, and diet recommendations.",
+    "allergies": "<strong>Personalized Medicine:</strong> Antihistamines, Nasal corticosteroids.<br> <strong>AI Treatment Plan:</strong> AI-driven allergen tracking and avoidance strategies.",
+    "anxiety": "<strong>Personalized Medicine:</strong> SSRIs, CBT (Cognitive Behavioral Therapy).<br> <strong>AI Treatment Plan:</strong> AI-driven mood tracking and mindfulness exercises.",
+    "depression": "<strong>Personalized Medicine:</strong> Antidepressants, Therapy.<br> <strong>AI Treatment Plan:</strong> AI-powered mood monitoring and personalized coping strategies.",
+    "obesity": "<strong>Personalized Medicine:</strong> Weight loss medications (if necessary).<br> <strong>AI Treatment Plan:</strong> AI-driven diet and exercise tracking.",
+    "osteoporosis": "<strong>Personalized Medicine:</strong> Bisphosphonates, Calcium, Vitamin D.<br> <strong>AI Treatment Plan:</strong> AI-powered bone density monitoring and exercise recommendations.",
+    "arthritis": "<strong>Personalized Medicine:</strong> NSAIDs, DMARDs (Disease-Modifying Antirheumatic Drugs).<br> <strong>AI Treatment Plan:</strong> AI-driven pain management and activity tracking.",
+    "heart disease": "<strong>Personalized Medicine:</strong> Statins, Beta-blockers.<br> <strong>AI Treatment Plan:</strong> AI-powered heart health monitoring and lifestyle recommendations.",
+    "gastroesophageal reflux disease (GERD)": "<strong>Personalized Medicine:</strong> Proton pump inhibitors, Antacids.<br> <strong>AI Treatment Plan:</strong> AI-driven diet tracking and symptom management.",
+    "insomnia": "<strong>Personalized Medicine:</strong> Sleep aids, Cognitive Behavioral Therapy for Insomnia (CBT-I).<br> <strong>AI Treatment Plan:</strong> AI-powered sleep tracking and relaxation techniques.",
+    "chronic pain": "<strong>Personalized Medicine:</strong> Pain relievers, Physical therapy.<br> <strong>AI Treatment Plan:</strong> AI-driven pain management strategies and activity tracking.",
+    "hyperlipidemia": "<strong>Personalized Medicine:</strong> Statins, Fibrates.<br> <strong>AI Treatment Plan:</strong> AI-powered cholesterol monitoring and dietary recommendations.",
+    "thyroid": "<strong>Personalized Medicine:</strong> Levothyroxine (for hypothyroidism), Antithyroid medications (for hyperthyroidism).<br> <strong>AI Treatment Plan:</strong> AI-driven hormone level monitoring and lifestyle adjustments.",
+    
+    // Additional treatments
+    "chronic obstructive pulmonary disease (COPD)": "<strong>Personalized Medicine:</strong> Bronchodilators, Corticosteroids.<br> <strong>AI Treatment Plan:</strong> AI-powered lung function monitoring and smoking cessation support.",
+    "bipolar disorder": "<strong>Personalized Medicine:</strong> Mood stabilizers, Antipsychotics.<br> <strong>AI Treatment Plan:</strong> AI-driven mood tracking and personalized therapy recommendations.",
+    "post-traumatic stress disorder (PTSD)": "<strong>Personalized Medicine:</strong> SSRIs, Trauma -focused therapy.<br> <strong>AI Treatment Plan:</strong> AI-driven symptom tracking and coping strategy development.",
+    "pneumonia": "<strong>Personalized Medicine:</strong> Antibiotics (if bacterial).<br> <strong>AI Treatment Plan:</strong> AI-powered symptom monitoring and recovery tracking.",
+    "liver disease": "<strong>Personalized Medicine:</strong> Antiviral medications (for hepatitis), Lifestyle changes.<br> <strong>AI Treatment Plan:</strong> AI-driven liver function monitoring and dietary recommendations.",
+    "sciatica": "<strong>Personalized Medicine:</strong> Pain relievers, Physical therapy.<br> <strong>AI Treatment Plan:</strong> AI-driven pain management and exercise tracking.",
+    "gout": "<strong>Personalized Medicine:</strong> Colchicine, NSAIDs.<br> <strong>AI Treatment Plan:</strong> AI-powered diet tracking and uric acid level monitoring.",
+    "menopause": "<strong>Personalized Medicine:</strong> Hormone replacement therapy (HRT), Lifestyle modifications.<br> <strong>AI Treatment Plan:</strong> AI-driven symptom tracking and wellness recommendations.",
+    "cancer": "<strong>Personalized Medicine:</strong> Chemotherapy, Targeted therapy.<br> <strong>AI Treatment Plan:</strong> AI-powered treatment adherence monitoring and symptom management.",
+    "fibromyalgia": "<strong>Personalized Medicine:</strong> Antidepressants, Pain relievers.<br> <strong>AI Treatment Plan:</strong> AI-driven symptom tracking and lifestyle adjustments.",
+    "varicose veins": "<strong>Personalized Medicine:</strong> Compression stockings, Sclerotherapy.<br> <strong>AI Treatment Plan:</strong> AI-powered activity tracking and lifestyle recommendations.",
+    
+    // More treatments
+    "eczema": "<strong>Personalized Medicine:</strong> Topical corticosteroids, Moisturizers.<br> <strong>AI Treatment Plan:</strong> AI-driven skin condition monitoring and trigger identification.",
+    "psoriasis": "<strong>Personalized Medicine:</strong> Topical treatments, Systemic medications.<br> <strong>AI Treatment Plan:</strong> AI-powered symptom tracking and lifestyle recommendations.",
+    "kidney disease": "<strong>Personalized Medicine:</strong> Dietary modifications, Medications for blood pressure control.<br> <strong>AI Treatment Plan:</strong> AI-driven kidney function monitoring and dietary tracking.",
+    "chronic fatigue syndrome": "<strong>Personalized Medicine:</strong> Lifestyle changes, Cognitive Behavioral Therapy.<br> <strong>AI Treatment Plan:</strong> AI-driven energy management and symptom tracking.",
+    "sickle cell disease": "<strong>Personalized Medicine:</strong> Pain management, Hydroxyurea.<br> <strong>AI Treatment Plan:</strong> AI-powered symptom monitoring and hydration reminders.",
+    "tension headaches": "<strong>Personalized Medicine:</strong> Pain relievers, Stress management techniques.<br> <strong>AI Treatment Plan:</strong> AI-driven stress tracking and relaxation strategies.",
+    "pediatric conditions": "<strong>Personalized Medicine:</strong> Age-appropriate medications, Behavioral therapy.<br> <strong>AI Treatment Plan:</strong> AI-driven growth and development monitoring.",
+    "thyroid disorders": "<strong>Personalized Medicine:</strong> Levothyroxine (for hypothyroidism), Antithyroid medications (for hyperthyroidism).<br> <strong>AI Treatment Plan:</strong> AI-driven hormone level monitoring and lifestyle adjustments."
+};
+            if (treatments[disease]) {
+                resultDiv.innerHTML = treatments[disease];
+            } else {
+                resultDiv.innerHTML = "<strong>No predefined treatment available.</strong> Check the spelling of the disease or consult a doctor for a personalized plan.";
+            }
+            resultDiv.style.display = "block";
+        }
+
+        function startVoiceInput() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.onresult = function(event) {
+                document.getElementById("diseaseInput").value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+    </script>
+</body>
+</html>

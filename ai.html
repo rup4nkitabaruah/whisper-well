@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Medical Chatbot</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #79ceffea; /* Dark contrast background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 600px; /* Increased width for larger chatbox */
+            height: 700px; /* Increased height for larger chatbox */
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            border-radius: 20px; /* Rounded corners for rectangular shape */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Chatbox - where messages appear */
+        .chat-box {
+            padding: 25px;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 3px solid #ff2f92; /* Dark pink border */
+        }
+
+        /* Input Section */
+        .chat-input {
+            padding: 20px;
+            display: flex;
+            background-color: #1c1c1c; /* Dark background for input area */
+            border-top: 3px solid #ff2f92; /* Pink border for input */
+        }
+
+        /* Input Field */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            background-color: #444; /* Dark grey input field */
+            color: white;
+        }
+
+        /* Send Button */
+        button {
+            padding: 15px;
+            margin-left: 15px;
+            background-color: #ff2f92; /* Dark pink button */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #e6247b; /* Slightly darker pink on hover */
+        }
+
+        /* Message Styling */
+        .message {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            max-width: 85%;
+            position: relative;
+            font-size: 18px;
+        }
+
+        /* User Message */
+        .user-message {
+            background-color: #333; /* Dark grey for user messages */
+            align-self: flex-end;
+        }
+
+        /* Bot Message */
+        .bot-message {
+            background-color: #555; /* Slightly lighter grey for bot messages */
+            align-self: flex-start;
+        }
+
+        /* Add a Symbol to Bot's message */
+        .bot-message::before {
+            content: "💊"; /* Medicine symbol */
+            position: absolute;
+            top: 10px;
+            left: -30px;
+            font-size: 24px;
+        }
+
+        .user-message::before {
+            content: "🗣️"; /* Speech bubble symbol */
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Enter disease name..." onkeydown="checkEnter(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Dummy medical data for diseases and their required medicines
+        const diseaseMedicines = {
+            "fever": "For fever, common medicines include Paracetamol (Tylenol), Ibuprofen (Advil), or Acetaminophen.",
+            "headache": "For headaches, common treatments include Ibuprofen, Acetaminophen, or Aspirin.",
+            "diabetes": "For diabetes, insulin therapy and oral medications like Metformin are commonly prescribed.",
+            "hypertension": "Common medicines for hypertension include Lisinopril, Amlodipine, or Hydrochlorothiazide.",
+            "cough": "For a cough, over-the-counter medications such as Dextromethorphan, Guaifenesin, or honey may help.",
+            "cold": "For the common cold, medications like Diphenhydramine (Benadryl), acetaminophen (Tylenol), or vitamin C may help."
+        };
+
+        function sendMessage() {
+            let userInput = document.getElementById('user-input').value;
+            if (userInput.trim() === "") return;
+            
+            addMessage(userInput, "user");
+            document.getElementById('user-input').value = "";
+
+            // Simulate AI response
+            setTimeout(() => {
+                let response = getMedicinesResponse(userInput);
+                addMessage(response, "bot");
+            }, 1000);
+        }
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(message, sender) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+            messageDiv.innerText = message;
+            document.getElementById("chat-box").appendChild(messageDiv);
+            document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight;
+        }
+
+        function getMedicinesResponse(userInput) {
+            userInput = userInput.toLowerCase();
+
+            // Check for the disease in the user input and return the medicines for that disease
+            for (let disease in diseaseMedicines) {
+                if (userInput.includes(disease)) {
+                    return diseaseMedicines[disease];
+                }
+            }
+
+            return "I'm sorry, I don't have information on that disease. Please consult a healthcare provider.";
+        }
+    </script>
+
+</body>
+</html>
